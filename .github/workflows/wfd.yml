@@ -38,18 +38,11 @@ jobs:
       name: staging
     steps:
       - name: Needs Approval
-        run: echo The environment  
-  comment:
+        run: echo The environment is ${{ inputs.environment }}
+  next-step:
     runs-on: ubuntu-latest
+    needs: require-approval
     steps:
-    - uses: actions/github-script@v6
-      with:
-        github-token: ${{secrets.GITHUB_TOKEN}}
-        script: |
-          await github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: '👋 Thanks for reporting!'
-          })
+      - name: Approved
+        run: echo "next!"
             
