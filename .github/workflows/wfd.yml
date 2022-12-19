@@ -1,3 +1,5 @@
+name: wfd_form
+
 on:
   workflow_dispatch:
     inputs:
@@ -29,4 +31,25 @@ jobs:
     if:  ${{ inputs.print_tags }} 
     steps:
       - name: Print the input tag to STDOUT
-        run: echo  The tags are ${{ inputs.tags }} 
+        run: echo The tags are ${{ inputs.tags }}
+  require-approval:
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+    steps:
+      - name: Needs Approval
+        run: echo The environment  
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/github-script@6
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+            github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: "🎉 You've created this issue comment using GitHub Script!!!"
+            })
+            
